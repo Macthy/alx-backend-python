@@ -65,24 +65,23 @@ class TestGetJson(unittest.TestCase):
             self.assertEqual(get_json(url), payloadi)
 
 
- class TestMemoize(unittest.TestCase):
-    ''' memoize unittest '''
-
-    def test_memoize(self):
-        ''' memoize test '''
-
+class TestMemoize(unittest.TestCase):
+    """Tests the `memoize` function."""
+    def test_memoize(self) -> None:
+        """Tests `memoize`'s output."""
         class TestClass:
-            ''' self descriptive'''
-
             def a_method(self):
                 return 42
 
             @memoize
             def a_property(self):
                 return self.a_method()
-
-        with patch.object(TestClass, 'a_method') as mocked:
-            spec = TestClass()
-            spec.a_property
-            spec.a_property
-            mocked.asset_called_once()
+        with patch.object(
+                TestClass,
+                "a_method",
+                return_value=lambda: 42,
+                ) as memo_fxn:
+            test_class = TestClass()
+            self.assertEqual(test_class.a_property(), 42)
+            self.assertEqual(test_class.a_property(), 42)
+            memo_fxn.assert_called_once()
